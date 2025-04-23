@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h3 class="display-4">Detalhes do Fornecedor</h3>
+
+  <div class="card">
+    <div class="card-body">
+      <h3 class="card-title">NOME</h3>
+      <P class="card-title">{{ object.name }}</P>
+      <hr>
+      <h3 class="card-title">Razao social</h3>
+      <p class="card-title">{{ object.company }}</p>
+      <hr>
+      <h3 class="card-title">Nome Fantasia</h3>
+      <p class="card-title">{{ object.trade }}</p>
+      <hr>
+      <h3 class="card-title">Email</h3>
+      <P class="card-title">{{ object.email }}</P>
+      <hr>
+      <h3 class="card-title">Endereço</h3>
+      <p class="card-title">{{ object.address }}</p>
+      <hr>
+      <h3 class="card-title">Bairro</h3>
+      <p class="card-title">{{ object.neighborhood }}</p>
+      <hr>
+      <h3 class="card-title">Cidade</h3>
+      <p class="card-text">{{ object.city }}</p>
+      <hr>
+      <h3 class="card-title">Estado</h3>
+      <P class="card-title">{{ object.state }}</P>
+      <hr>
+      <h3 class="card-title">País</h3>
+      <p class="card-title">{{ object.country }}</p>
+      <hr>
+      <h3 class="card-title">CEP</h3>
+      <p class="card-title">{{ object.zipcode }}</p>
+      <hr>
+      <h3 class="card-title">Celular</h3>
+      <P class="card-title">{{ object.phone }}</P>
+      <hr>
+      <h3 class="card-title">FAX</h3>
+      <p class="card-title">{{ object.fax }}</p>
+      <hr>
+      <h3 class="card-title">CNPJ</h3>
+      <p class="card-title">{{ object.cnpj }}</p>
+      <hr>
+      <h3 class="card-title">Descrição</h3>
+      <p class="card-text">{{ object.description }}</p>
+      </div>
+    </div>
+
+    <a href="{% url 'supplier_list' %}" class="btn btn-secondary mt-3">Voltar para a Lista de Fornecedores</a>
+  </div>
+{% endblock %}
