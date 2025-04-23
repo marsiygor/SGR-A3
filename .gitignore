@@ -1,0 +1,12 @@
+venv/
+__pycache__/
+logs/
+
+# Arquivos
+*.pyc
+*.log
+*.DS_Store
+
+# Outros
+pip-debug.log
+pip.log
