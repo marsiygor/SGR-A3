@@ -1,0 +1,35 @@
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from .models import Waste
+from .forms import WasteForm
+
+
+class WasteListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
+    model = Waste
+    template_name = 'wastes/waste_list.html'
+    context_object_name = 'wastes'
+    permission_required = 'wastes.view_waste'
+
+
+class WasteCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+    model = Waste
+    form_class = WasteForm
+    template_name = 'wastes/waste_form.html'
+    success_url = reverse_lazy('waste_list')
+    permission_required = 'wastes.add_waste'
+
+
+class WasteUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+    model = Waste
+    form_class = WasteForm
+    template_name = 'wastes/waste_form.html'
+    success_url = reverse_lazy('waste_list')
+    permission_required = 'wastes.change_waste'
+
+
+class WasteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+    model = Waste
+    template_name = 'wastes/waste_confirm_delete.html'
+    success_url = reverse_lazy('waste_list')
+    permission_required = 'wastes.delete_waste'

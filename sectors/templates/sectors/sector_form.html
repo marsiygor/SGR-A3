@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.id %}Editar{% else %}Novo{% endif %} Setor{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col">
+    <h2>{% if form.instance.id %}Editar{% else %}Novo{% endif %} Setor</h2>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      
+      <div class="mb-3">
+        <label for="{{ form.name.id_for_label }}" class="form-label">Nome</label>
+        {{ form.name }}
+        {% if form.name.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.name.errors }}
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="mb-3">
+        <label for="{{ form.responsible.id_for_label }}" class="form-label">Responsável</label>
+        {{ form.responsible }}
+        {% if form.responsible.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.responsible.errors }}
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="mb-3">
+        <label for="{{ form.location.id_for_label }}" class="form-label">Localização</label>
+        {{ form.location }}
+        {% if form.location.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.location.errors }}
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="d-flex justify-content-between">
+        <a href="{% url 'sector_list' %}" class="btn btn-secondary">Cancelar</a>
+        <button type="submit" class="btn btn-primary">Salvar</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

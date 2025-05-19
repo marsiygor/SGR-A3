@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Resíduos{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <h2>Resíduos</h2>
+  </div>
+  <div class="col-md-6 text-end">
+    {% if perms.wastes.add_waste %}
+    <a href="{% url 'waste_create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Adicionar Resíduo
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Categoria</th>
+            <th>Peso (kg)</th>
+            <th>Setor</th>
+            <th>Data de Registro</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for waste in wastes %}
+          <tr>
+            <td>{{ waste.category.name }}</td>
+            <td>{{ waste.weight }}</td>
+            <td>{{ waste.sector.name }}</td>
+            <td>{{ waste.created_at|date:"d/m/Y H:i" }}</td>
+            <td>
+              {% if perms.wastes.change_waste %}
+              <a href="{% url 'waste_update' waste.id %}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i>
+              </a>
+              {% endif %}
+              {% if perms.wastes.delete_waste %}
+              <a href="{% url 'waste_delete' waste.id %}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="text-center">Nenhum resíduo cadastrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

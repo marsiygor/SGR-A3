@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Preços{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <h2>Preços</h2>
+  </div>
+  <div class="col-md-6 text-end">
+    {% if perms.prices.add_price %}
+    <a href="{% url 'price_create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Adicionar Preço
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Categoria</th>
+            <th>Valor (R$)</th>
+            <th>Data de Atualização</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for price in prices %}
+          <tr>
+            <td>{{ price.category.name }}</td>
+            <td>{{ price.value }}</td>
+            <td>{{ price.updated_at|date:"d/m/Y H:i" }}</td>
+            <td>
+              {% if perms.prices.change_price %}
+              <a href="{% url 'price_update' price.id %}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i>
+              </a>
+              {% endif %}
+              {% if perms.prices.delete_price %}
+              <a href="{% url 'price_delete' price.id %}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center">Nenhum preço cadastrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

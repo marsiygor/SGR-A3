@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Setores{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <h2>Setores</h2>
+  </div>
+  <div class="col-md-6 text-end">
+    {% if perms.sectors.add_sector %}
+    <a href="{% url 'sector_create' %}" class="btn btn-primary">
+      <i class="bi bi-plus-circle"></i> Adicionar Setor
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Responsável</th>
+            <th>Localização</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sector in sectors %}
+          <tr>
+            <td>{{ sector.name }}</td>
+            <td>{{ sector.responsible }}</td>
+            <td>{{ sector.location }}</td>
+            <td>
+              {% if perms.sectors.change_sector %}
+              <a href="{% url 'sector_update' sector.id %}" class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i>
+              </a>
+              {% endif %}
+              {% if perms.sectors.delete_sector %}
+              <a href="{% url 'sector_delete' sector.id %}" class="btn btn-sm btn-outline-danger">
+                <i class="bi bi-trash"></i>
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="4" class="text-center">Nenhum setor cadastrado.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

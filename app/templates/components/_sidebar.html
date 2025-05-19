@@ -4,8 +4,7 @@
       <button class="btn btn-dark d-block d-sm-none mb-3" type="button" data-bs-toggle="collapse"
         data-bs-target="#menuCollapse" aria-expanded="false" aria-controls="menuCollapse">
         <i class="bi bi-list fs-4"></i>
-      </button>
-      <div class="collapse d-sm-block" id="menuCollapse">
+      </button>      <div class="collapse d-sm-block" id="menuCollapse">
         <ul class="nav flex-column align-items-start" id="menu">
           <li>
             <a href="{% url 'home' %}" class="nav-link px-0 align-middle">
@@ -13,22 +12,6 @@
               <span class="ms-1">Dashboard</span>
             </a>
           </li>
-          {% if perms.suppliers.view_supplier %}
-            <li>
-              <a href="{% url 'supplier_list' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-truck fs-4"></i>
-                <span class="ms-1">Fornecedores</span>
-              </a>
-            </li>
-          {% endif %}
-          {% if perms.brands.view_brand %}
-            <li>
-              <a href="{% url 'brand_list' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-shop fs-4"></i>
-                <span class="ms-1">Marcas</span>
-              </a>
-            </li>
-          {% endif %}
           {% if perms.categories.view_category %}
             <li>
               <a href="{% url 'category_list' %}" class="nav-link px-0 align-middle">
@@ -37,27 +20,35 @@
               </a>
             </li>
           {% endif %}
-          {% if perms.products.view_product %}
+          {% if perms.sectors.view_sector %}
             <li>
-              <a href="{% url 'product_list' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-box-seam fs-4"></i>
-                <span class="ms-1">Produtos</span>
+              <a href="{% url 'sector_list' %}" class="nav-link px-0 align-middle">
+                <i class="bi bi-building fs-4"></i>
+                <span class="ms-1">Setor</span>
               </a>
             </li>
           {% endif %}
-          {% if perms.inflows.view_inflow %}
+          {% if perms.prices.view_price %}
             <li>
-              <a href="{% url 'inflow_list' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-arrow-down-left-square fs-4"></i>
-                <span class="ms-1">Entradas</span>
+              <a href="{% url 'price_list' %}" class="nav-link px-0 align-middle">
+                <i class="bi bi-cash fs-4"></i>
+                <span class="ms-1">Preço</span>
               </a>
             </li>
           {% endif %}
-          {% if perms.outflows.view_outflow %}
+          {% if perms.wastes.view_waste %}
             <li>
-              <a href="{% url 'outflow_list' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-arrow-up-right-square fs-4"></i>
-                <span class="ms-1">Saídas</span>
+              <a href="{% url 'waste_list' %}" class="nav-link px-0 align-middle">
+                <i class="bi bi-recycle fs-4"></i>
+                <span class="ms-1">Resíduos</span>
+              </a>
+            </li>
+          {% endif %}
+          {% if perms.records.view_record %}
+            <li>
+              <a href="{% url 'record_list' %}" class="nav-link px-0 align-middle">
+                <i class="bi bi-journal-text fs-4"></i>
+                <span class="ms-1">Registro</span>
               </a>
             </li>
           {% endif %}

@@ -14,10 +14,13 @@ urlpatterns = [
 
     path('', views.home, name='home'),
     path('', include('suppliers.urls')),
-    path('', include('brands.urls')),
+    path('', include('brands.urls')),    
     path('', include('categories.urls')),
     path('', include('products.urls')),
     path('', include('inflows.urls')),
     path('', include('outflows.urls')),
-    
+    path('', include('sectors.urls')),
+    path('', include('prices.urls')),
+    path('wastes/', include('wastes.urls')),
+    path('records/', include('records.urls')),
 ]
