@@ -2,6 +2,7 @@ from django.db import models
 
 
 class Waste(models.Model):
+    name = models.CharField(max_length=255, default="")
     category = models.ForeignKey('categories.Category', on_delete=models.CASCADE, related_name='wastes')
     weight = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField(null=True, blank=True)
@@ -13,4 +14,4 @@ class Waste(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.category} - {self.weight}kg"
+        return f"{self.name} - {self.category} - {self.weight}kg"

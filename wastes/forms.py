@@ -5,6 +5,11 @@ from sectors.models import Sector
 
 
 class WasteForm(forms.ModelForm):
+    name = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        required=True,
+        label='Nome do resíduo'
+    )
     category = forms.ModelChoiceField(
         queryset=Category.objects.all(),
         widget=forms.Select(attrs={'class': 'form-control'})
@@ -23,4 +28,4 @@ class WasteForm(forms.ModelForm):
 
     class Meta:
         model = Waste
-        fields = ['category', 'weight', 'description', 'sector']
+        fields = ['name', 'category', 'weight', 'description', 'sector']

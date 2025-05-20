@@ -22,6 +22,7 @@
       <table class="table table-striped">
         <thead>
           <tr>
+            <th>Nome</th>
             <th>Categoria</th>
             <th>Peso (kg)</th>
             <th>Setor</th>
@@ -32,6 +33,7 @@
         <tbody>
           {% for waste in wastes %}
           <tr>
+            <td>{{ waste.name }}</td>
             <td>{{ waste.category.name }}</td>
             <td>{{ waste.weight }}</td>
             <td>{{ waste.sector.name }}</td>
@@ -51,7 +53,7 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="5" class="text-center">Nenhum resíduo cadastrado.</td>
+            <td colspan="6" class="text-center">Nenhum resíduo cadastrado.</td>
           </tr>
           {% endfor %}
         </tbody>

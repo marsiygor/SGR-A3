@@ -79,3 +79,46 @@ def get_graphic_product_category_metric():
 def get_graphic_product_brand_metric():
     brands = Brand.objects.all()
     return {brand.name: Product.objects.filter(brand=brand).count() for brand in brands}
+
+
+def get_waste_and_record_metrics():
+    from sectors.models import Sector
+    from wastes.models import Waste
+    from records.models import Record
+    from django.db.models import Sum
+    
+    num_sectors = Sector.objects.count()
+    num_wastes = Waste.objects.count()
+    total_waste_weight = Waste.objects.aggregate(total=Sum('weight'))['total'] or 0
+    
+    total_entry_value = Record.objects.filter(is_entry=True).aggregate(total=Sum('value'))['total'] or 0
+    total_exit_value = Record.objects.filter(is_entry=False).aggregate(total=Sum('value'))['total'] or 0
+    
+    return {
+        'num_sectors': num_sectors,
+        'num_wastes': num_wastes,
+        'total_waste_weight': total_waste_weight,
+        'total_entry_value': total_entry_value,
+        'total_exit_value': total_exit_value,
+    }
+
+
+def get_entry_exit_data():
+    from records.models import Record
+    from django.utils import timezone
+    from django.db.models import Sum
+    today = timezone.now().date()
+    dates = [today - timezone.timedelta(days=i) for i in range(6, -1, -1)]
+    labels = [d.strftime('%d/%m') for d in dates]
+    entry_values = []
+    exit_values = []
+    for d in dates:
+        entry = Record.objects.filter(is_entry=True, date__date=d).aggregate(total=Sum('value'))['total'] or 0
+        exit = Record.objects.filter(is_entry=False, date__date=d).aggregate(total=Sum('value'))['total'] or 0
+        entry_values.append(float(entry))
+        exit_values.append(float(exit))
+    return {
+        'dates': labels,
+        'entry_values': entry_values,
+        'exit_values': exit_values,
+    }
