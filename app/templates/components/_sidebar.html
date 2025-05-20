@@ -28,19 +28,19 @@
               </a>
             </li>
           {% endif %}
-          {% if perms.prices.view_price %}
-            <li>
-              <a href="{% url 'price_list' %}" class="nav-link px-0 align-middle">
-                <i class="bi bi-cash fs-4"></i>
-                <span class="ms-1">Preço</span>
-              </a>
-            </li>
-          {% endif %}
           {% if perms.wastes.view_waste %}
             <li>
               <a href="{% url 'waste_list' %}" class="nav-link px-0 align-middle">
                 <i class="bi bi-recycle fs-4"></i>
                 <span class="ms-1">Resíduos</span>
+              </a>
+            </li>
+          {% endif %}
+          {% if perms.prices.view_price %}
+            <li>
+              <a href="{% url 'price_list' %}" class="nav-link px-0 align-middle">
+                <i class="bi bi-cash fs-4"></i>
+                <span class="ms-1">Preço</span>
               </a>
             </li>
           {% endif %}

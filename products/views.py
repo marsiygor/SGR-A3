@@ -2,6 +2,7 @@ from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.http import JsonResponse
 from app import metrics
 from brands.models import Brand
 from categories.models import Category
@@ -79,3 +80,10 @@ class ProductCreateListAPIView(generics.ListCreateAPIView):
 class ProductRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Product.objects.all()
     serializer_class = serializers.ProductSerializer
+
+
+def products_by_category(request, category_id):
+    from .models import Product
+    products = Product.objects.filter(category_id=category_id)
+    data = [{'id': p.id, 'title': p.title} for p in products]
+    return JsonResponse(data, safe=False)

@@ -1,6 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.http import JsonResponse
 from .models import Waste
 from .forms import WasteForm
 
@@ -33,3 +34,9 @@ class WasteDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'wastes/waste_confirm_delete.html'
     success_url = reverse_lazy('waste_list')
     permission_required = 'wastes.delete_waste'
+
+
+def wastes_by_category(request, category_id):
+    wastes = Waste.objects.filter(category_id=category_id)
+    data = [{'id': w.id, 'name': f'{w.category.name} - {w.weight}kg'} for w in wastes]
+    return JsonResponse(data, safe=False)

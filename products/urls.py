@@ -11,4 +11,5 @@ urlpatterns = [
 
     path('api/v1/products/', views.ProductCreateListAPIView.as_view(), name='product-create-list-api-view'),
     path('api/v1/products/<int:pk>/', views.ProductRetrieveUpdateDestroyAPIView.as_view(), name='product-detail-api-view'),
+    path('api/by_category/<int:category_id>/', views.products_by_category, name='products_by_category'),
 ]

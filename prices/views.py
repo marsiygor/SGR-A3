@@ -2,6 +2,7 @@ from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
+from django.http import JsonResponse
 from . import models, forms, serializers
 
 
@@ -49,3 +50,10 @@ class PriceCreateListAPIView(generics.ListCreateAPIView):
 class PriceRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = models.Price.objects.all()
     serializer_class = serializers.PriceSerializer
+
+
+def price_by_category(request, category_id):
+    from .models import Price
+    price = Price.objects.filter(category_id=category_id).order_by('-updated_at').first()
+    value = float(price.value) if price else 0
+    return JsonResponse({'value': value})
