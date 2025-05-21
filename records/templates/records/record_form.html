@@ -15,26 +15,15 @@
       {% csrf_token %}
       
       <div class="mb-3">
-        <label for="{{ form.category.id_for_label }}" class="form-label">Categoria</label>
-        {{ form.category }}
-        {% if form.category.errors %}
+        <label for="{{ form.waste.id_for_label }}" class="form-label">Resíduo</label>
+        {{ form.waste }}
+        {% if form.waste.errors %}
         <div class="invalid-feedback d-block">
-          {{ form.category.errors }}
+          {{ form.waste.errors }}
         </div>
         {% endif %}
       </div>
-      
-      <div class="mb-3">
-        <label for="{{ form.product.id_for_label }}" class="form-label">Produto</label>
-        {{ form.product }}
-        {% if form.product.errors %}
-        <div class="invalid-feedback d-block">
-          {{ form.product.errors }}
-        </div>
-        {% endif %}
-      </div>
-      
-      <div class="mb-3">
+        <div class="mb-3">
         <label for="{{ form.weight.id_for_label }}" class="form-label">Peso (kg)</label>
         {{ form.weight }}
         {% if form.weight.errors %}
@@ -43,16 +32,8 @@
         </div>
         {% endif %}
       </div>
-      
-      <div class="mb-3">
-        <label for="{{ form.value.id_for_label }}" class="form-label">Valor (R$)</label>
-        {{ form.value }}
-        {% if form.value.errors %}
-        <div class="invalid-feedback d-block">
-          {{ form.value.errors }}
-        </div>
-        {% endif %}
-      </div>
+        <!-- Campo oculto de preço por kg -->
+      {{ form.unit_price }}
       
       <div class="mb-3">
         <label for="{{ form.is_entry.id_for_label }}" class="form-label">Tipo</label>
@@ -60,6 +41,16 @@
         {% if form.is_entry.errors %}
         <div class="invalid-feedback d-block">
           {{ form.is_entry.errors }}
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="mb-3">
+        <label for="{{ form.date.id_for_label }}" class="form-label">Data e Hora</label>
+        {{ form.date }}
+        {% if form.date.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.date.errors }}
         </div>
         {% endif %}
       </div>
@@ -74,48 +65,82 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const categorySelect = document.getElementById('id_category');
-    const productSelect = document.getElementById('id_product');
+    const wasteSelect = document.getElementById('id_waste');
     const weightInput = document.getElementById('id_weight');
-    const valueInput = document.getElementById('id_value');
-    const isEntrySelect = document.getElementById('id_is_entry');
-    let pricePerKg = 0;
-
-    function filterProducts() {
-      const categoryId = categorySelect.value;
-      fetch(`/products/api/by_category/${categoryId}/`)
-        .then(response => response.json())
-        .then(data => {
-          productSelect.innerHTML = '';
-          data.forEach(function(product) {
-            const option = document.createElement('option');
-            option.value = product.id;
-            option.text = product.title;
-            productSelect.appendChild(option);
+    const unitPriceInput = document.getElementById('id_unit_price');    // Criar displays para as informações
+    const infoContainer = document.createElement('div');
+    infoContainer.className = 'mt-4 mb-3';
+    
+    const priceDisplay = document.createElement('div');
+    priceDisplay.className = 'alert alert-secondary';
+    priceDisplay.id = 'price_display';
+    priceDisplay.innerHTML = '<strong>Preço por kg do resíduo:</strong> <span id="unit_price">R$ 0,00</span>';
+    infoContainer.appendChild(priceDisplay);
+    
+    const totalValueDisplay = document.createElement('div');
+    totalValueDisplay.className = 'alert alert-info';
+    totalValueDisplay.id = 'total_value_display';
+    totalValueDisplay.innerHTML = '<strong>Valor Total Estimado:</strong> <span id="total_value">R$ 0,00</span>';
+    infoContainer.appendChild(totalValueDisplay);
+    
+    // Inserir o container de informações antes do botão de submissão
+    const formButtons = document.querySelector('.d-flex.justify-content-between');
+    formButtons.parentNode.insertBefore(infoContainer, formButtons);
+      // Função para obter o preço por kg do resíduo selecionado
+    function updateUnitPrice() {
+      const wasteId = wasteSelect.value;
+      if (wasteId) {
+        // Fazer uma solicitação AJAX para obter os detalhes do resíduo
+        fetch(`/wastes/api/${wasteId}/`)
+          .then(response => response.json())
+          .then(data => {
+            if (data && data.price_per_kg !== undefined) {
+              const price = parseFloat(data.price_per_kg);
+              // Atualizar o campo oculto
+              unitPriceInput.value = price.toFixed(2);
+              // Atualizar o display de preço
+              document.getElementById('unit_price').textContent = `R$ ${price.toFixed(2)}`;
+              // Atualizar o valor total
+              calculateTotalValue();
+            }
+          })
+          .catch(error => {
+            console.error('Erro ao obter preço do resíduo:', error);
           });
-        });
-      // Buscar preço por quilo do resíduo
-      fetch(`/prices/api/by_category/${categoryId}/`)
-        .then(response => response.json())
-        .then(data => {
-          pricePerKg = data.value || 0;
-          updateValue();
-        });
+      } else {
+        document.getElementById('unit_price').textContent = 'R$ 0,00';
+        document.getElementById('total_value').textContent = 'R$ 0,00';
+        unitPriceInput.value = '0.00';
+      }
     }
-    function updateValue() {
+    
+    // Função para calcular o valor total
+    function calculateTotalValue() {
       const weight = parseFloat(weightInput.value) || 0;
-      valueInput.value = (weight * pricePerKg).toFixed(2);
+      const unitPrice = parseFloat(unitPriceInput.value) || 0;
+      const totalValue = weight * unitPrice;
+      
+      // Atualizar o valor total na página
+      document.getElementById('total_value').textContent = `R$ ${totalValue.toFixed(2)}`;
     }
-    if (categorySelect) {
-      categorySelect.addEventListener('change', filterProducts);
-      filterProducts();
+    
+    // Adicionar event listeners
+    if (wasteSelect) {
+      wasteSelect.addEventListener('change', updateUnitPrice);
+      
+      // Se já houver um resíduo selecionado ao carregar a página
+      if (wasteSelect.value) {
+        updateUnitPrice();
+      }
     }
-    if (weightInput) {
-      weightInput.addEventListener('input', updateValue);
+    
+    if (weightInput && unitPriceInput) {
+      weightInput.addEventListener('input', calculateTotalValue);
+      unitPriceInput.addEventListener('input', calculateTotalValue);
     }
-    if (isEntrySelect) {
-      isEntrySelect.addEventListener('change', updateValue);
-    }
+    
+    // Calcular o valor total inicial
+    calculateTotalValue();
   });
 </script>
 {% endblock %}

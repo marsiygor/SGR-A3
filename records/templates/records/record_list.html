@@ -19,11 +19,13 @@
 <div class="card">
   <div class="card-body">
     <div class="table-responsive">
-      <table class="table table-striped">
-        <thead>
+      <table class="table table-striped">        <thead>
           <tr>
-            <th>Categoria</th>
-            <th>Valor (R$)</th>
+            <th>Resíduo</th>
+            <th>Peso (kg)</th>
+            <th>Preço/kg (R$)</th>
+            <th>Tipo</th>
+            <th>Valor Total (R$)</th>
             <th>Data</th>
             <th>Ações</th>
           </tr>
@@ -31,7 +33,10 @@
         <tbody>
           {% for record in records %}
           <tr>
-            <td>{{ record.category.name }}</td>
+            <td>{% if record.waste %}{{ record.waste.name }}{% else %}{{ record.category.name }}{% endif %}</td>
+            <td>{{ record.weight }}</td>
+            <td>{{ record.unit_price }}</td>
+            <td>{% if record.is_entry %}Entrada{% else %}Saída{% endif %}</td>
             <td>{{ record.value }}</td>
             <td>{{ record.date|date:"d/m/Y H:i" }}</td>
             <td>
@@ -49,7 +54,7 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="4" class="text-center">Nenhum registro cadastrado.</td>
+            <td colspan="6" class="text-center">Nenhum registro cadastrado.</td>
           </tr>
           {% endfor %}
         </tbody>

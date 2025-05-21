@@ -25,6 +25,7 @@
             <th>Nome</th>
             <th>Categoria</th>
             <th>Peso (kg)</th>
+            <th>Preço por kg (R$)</th>
             <th>Setor</th>
             <th>Data de Registro</th>
             <th>Ações</th>
@@ -36,6 +37,7 @@
             <td>{{ waste.name }}</td>
             <td>{{ waste.category.name }}</td>
             <td>{{ waste.weight }}</td>
+            <td>{{ waste.price_per_kg }}</td>
             <td>{{ waste.sector.name }}</td>
             <td>{{ waste.created_at|date:"d/m/Y H:i" }}</td>
             <td>
@@ -53,7 +55,7 @@
           </tr>
           {% empty %}
           <tr>
-            <td colspan="6" class="text-center">Nenhum resíduo cadastrado.</td>
+            <td colspan="7" class="text-center">Nenhum resíduo cadastrado.</td>
           </tr>
           {% endfor %}
         </tbody>

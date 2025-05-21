@@ -35,7 +35,9 @@
                 <span class="ms-1">Resíduos</span>
               </a>
             </li>
-          {% endif %}
+          {% endif %}          
+          {% comment %}
+          Aba de preço temporariamente inutilizada
           {% if perms.prices.view_price %}
             <li>
               <a href="{% url 'price_list' %}" class="nav-link px-0 align-middle">
@@ -44,6 +46,7 @@
               </a>
             </li>
           {% endif %}
+          {% endcomment %}
           {% if perms.records.view_record %}
             <li>
               <a href="{% url 'record_list' %}" class="nav-link px-0 align-middle">

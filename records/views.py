@@ -1,6 +1,7 @@
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.utils import timezone
 from .models import Record
 from .forms import RecordForm
 
@@ -18,6 +19,10 @@ class RecordCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     template_name = 'records/record_form.html'
     success_url = reverse_lazy('record_list')
     permission_required = 'records.add_record'
+    
+    def form_valid(self, form):
+        form.instance.date = form.instance.date or timezone.now()
+        return super().form_valid(form)
 
 
 class RecordUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -26,6 +31,10 @@ class RecordUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     template_name = 'records/record_form.html'
     success_url = reverse_lazy('record_list')
     permission_required = 'records.change_record'
+    
+    def form_valid(self, form):
+        form.instance.date = form.instance.date or timezone.now()
+        return super().form_valid(form)
 
 
 class RecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):

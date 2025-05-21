@@ -1,5 +1,6 @@
 from django import forms
 from . import models
+from wastes.models import Waste
 
 
 class PriceForm(forms.ModelForm):
@@ -10,13 +11,13 @@ class PriceForm(forms.ModelForm):
         if 'category' in self.data:
             try:
                 category_id = int(self.data.get('category'))
-                self.fields['waste'].queryset = models.Waste.objects.filter(category_id=category_id)
+                self.fields['waste'].queryset = Waste.objects.filter(category_id=category_id)
             except (ValueError, TypeError):
-                self.fields['waste'].queryset = models.Waste.objects.none()
+                self.fields['waste'].queryset = Waste.objects.none()
         elif self.instance.pk:
-            self.fields['waste'].queryset = models.Waste.objects.filter(category=self.instance.category)
+            self.fields['waste'].queryset = Waste.objects.filter(category=self.instance.category)
         else:
-            self.fields['waste'].queryset = models.Waste.objects.none()
+            self.fields['waste'].queryset = Waste.objects.none()
 
     class Meta:
         model = models.Price

@@ -45,6 +45,16 @@
       </div>
       
       <div class="mb-3">
+        <label for="{{ form.price_per_kg.id_for_label }}" class="form-label">Preço por kg (R$)</label>
+        {{ form.price_per_kg }}
+        {% if form.price_per_kg.errors %}
+        <div class="invalid-feedback d-block">
+          {{ form.price_per_kg.errors }}
+        </div>
+        {% endif %}
+      </div>
+      
+      <div class="mb-3">
         <label for="{{ form.sector.id_for_label }}" class="form-label">Setor</label>
         {{ form.sector }}
         {% if form.sector.errors %}
