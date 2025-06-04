@@ -67,12 +67,11 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Data passed from Django template
+document.addEventListener('DOMContentLoaded', function() {  // Data passed from Django template
   const chartData = {
     'sectors': {
-      title: 'Resíduos por Setor',
-      data: JSON.parse('{{ waste_by_sector_data|escapejs }}')
+      title: 'Volume de Resíduos por Setor (kg)',
+      data: JSON.parse('{{ stock_by_sector_data|escapejs }}')
     },
     'wastes': {
       title: 'Resíduos por Categoria', 

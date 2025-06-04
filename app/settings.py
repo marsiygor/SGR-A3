@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
 
+    'app',  # App principal para comandos customizados
     'authentication',
     'categories',
     'brands',
