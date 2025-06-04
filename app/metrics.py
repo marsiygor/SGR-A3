@@ -232,3 +232,22 @@ def get_value_by_category_data():
         if stock_value > 0:
             data[category.name] = float(stock_value)
     return data
+
+
+def get_exit_by_category_data():
+    """Get exit volume (weight) by category for pie chart"""
+    from categories.models import Category
+    from records.models import Record
+    from django.db.models import Sum
+    
+    categories = Category.objects.all()
+    data = {}
+    for category in categories:
+        exit_weight = Record.objects.filter(
+            is_entry=False, 
+            waste__category=category
+        ).aggregate(total=Sum('weight'))['total'] or 0
+        
+        if exit_weight > 0:
+            data[category.name] = float(exit_weight)
+    return data

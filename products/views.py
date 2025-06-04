@@ -1,3 +1,4 @@
+import json
 from rest_framework import generics
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
@@ -33,13 +34,23 @@ class ProductListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
             queryset = queryset.filter(brand__id=brand)
 
         return queryset
-
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['product_metrics'] = metrics.get_product_metrics()
         context['sales_metrics'] = metrics.get_sales_metrics()
         context['categories'] = Category.objects.all()
         context['brands'] = Brand.objects.all()
+        
+        # Chart data for clickable cards
+        context['waste_record_metrics'] = metrics.get_waste_and_record_metrics()
+        context['waste_by_category_data'] = json.dumps(metrics.get_waste_by_category_data())
+        context['waste_by_sector_data'] = json.dumps(metrics.get_waste_by_sector_data())
+        context['stock_by_category_data'] = json.dumps(metrics.get_stock_by_category_data())
+        context['stock_by_sector_data'] = json.dumps(metrics.get_stock_by_sector_data())
+        context['value_by_category_data'] = json.dumps(metrics.get_value_by_category_data())
+        context['exit_by_category_data'] = json.dumps(metrics.get_exit_by_category_data())
+        
         return context
 
 

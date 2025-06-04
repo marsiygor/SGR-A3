@@ -36,12 +36,12 @@
             <small>Clique para ver gráfico</small>
           </div>
         </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card bg-danger text-white">
+      </div>      <div class="col-md-3">
+        <div class="card bg-danger text-white clickable-card" style="cursor: pointer;" data-chart="exit-volume">
           <div class="card-body text-center">
             <h6 class="card-title">Valor de Saída (R$)</h6>
             <p class="display-6">{{ waste_record_metrics.total_exit_value|floatformat:2 }}</p>
+            <small>Clique para ver gráfico</small>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@
 </div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {  // Data passed from Django template
+document.addEventListener('DOMContentLoaded', function() {  // Data passed from Django template  
   const chartData = {
     'sectors': {
       title: 'Volume de Resíduos por Setor (kg)',
@@ -84,6 +84,10 @@ document.addEventListener('DOMContentLoaded', function() {  // Data passed from 
     'stock-value': {
       title: 'Valor em Estoque por Categoria (R$)',
       data: JSON.parse('{{ value_by_category_data|escapejs }}')
+    },
+    'exit-volume': {
+      title: 'Volume de Resíduo que Saiu por Categoria (kg)',
+      data: JSON.parse('{{ exit_by_category_data|escapejs }}')
     }
   };
 
@@ -114,18 +118,19 @@ document.addEventListener('DOMContentLoaded', function() {  // Data passed from 
         data: {
           labels: Object.keys(data.data),
           datasets: [{
-            data: Object.values(data.data),
-            backgroundColor: [
-              '#FF6384',
-              '#36A2EB', 
-              '#FFCE56',
-              '#4BC0C0',
-              '#9966FF',
-              '#FF9F40',
-              '#FF6384',
-              '#C9CBCF',
-              '#4BC0C0',
-              '#FF6384'
+            data: Object.values(data.data),            backgroundColor: [
+              '#E53E3E', // Vermelho forte
+              '#3182CE', // Azul forte  
+              '#38A169', // Verde forte
+              '#D69E2E', // Amarelo/dourado forte
+              '#805AD5', // Roxo forte
+              '#DD6B20', // Laranja forte
+              '#319795', // Teal forte
+              '#718096', // Cinza forte
+              '#C53030', // Vermelho escuro
+              '#2B6CB0', // Azul escuro
+              '#2F855A', // Verde escuro
+              '#B7791F'  // Amarelo escuro
             ]
           }]
         },
