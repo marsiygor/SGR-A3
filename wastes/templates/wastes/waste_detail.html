@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Resíduo - {{ waste.name }}{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <h2>Detalhes do Resíduo</h2>
+  </div>
+  <div class="col-md-6 text-end">
+    <a href="{% url 'waste_list' %}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Voltar à Lista
+    </a>
+    {% if perms.wastes.change_waste %}
+    <a href="{% url 'waste_update' waste.id %}" class="btn btn-primary">
+      <i class="bi bi-pencil"></i> Editar
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <h5>Informações Básicas</h5>
+        <table class="table table-borderless">
+          <tbody>
+            <tr>
+              <td><strong>Nome:</strong></td>
+              <td>{{ waste.name }}</td>
+            </tr>
+            <tr>
+              <td><strong>Categoria:</strong></td>
+              <td>{{ waste.category.name }}</td>
+            </tr>
+            <tr>
+              <td><strong>Setor:</strong></td>
+              <td>{{ waste.sector.name }}</td>
+            </tr>
+            <tr>
+              <td><strong>Peso (kg):</strong></td>
+              <td>{{ waste.weight }}</td>
+            </tr>
+            <tr>
+              <td><strong>Preço por kg (R$):</strong></td>
+              <td>{{ waste.price_per_kg }}</td>
+            </tr>
+            <tr>
+              <td><strong>Valor Total (R$):</strong></td>
+              <td>{{ waste.weight|floatformat:2 }} kg × R$ {{ waste.price_per_kg|floatformat:2 }} = R$ {% widthratio waste.weight 1 waste.price_per_kg %}</td>
+            </tr>
+            <tr>
+              <td><strong>Data de Registro:</strong></td>
+              <td>{{ waste.created_at|date:"d/m/Y H:i" }}</td>
+            </tr>
+            <tr>
+              <td><strong>Última Atualização:</strong></td>
+              <td>{{ waste.updated_at|date:"d/m/Y H:i" }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      {% if waste.description %}
+      <div class="col-md-6">
+        <h5>Descrição</h5>
+        <p>{{ waste.description }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

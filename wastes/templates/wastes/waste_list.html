@@ -39,8 +39,10 @@
             <td>{{ waste.weight }}</td>
             <td>{{ waste.price_per_kg }}</td>
             <td>{{ waste.sector.name }}</td>
-            <td>{{ waste.created_at|date:"d/m/Y H:i" }}</td>
-            <td>
+            <td>{{ waste.created_at|date:"d/m/Y H:i" }}</td>            <td>
+              <a href="{% url 'waste_detail' waste.id %}" class="btn btn-sm btn-outline-info">
+                <i class="bi bi-eye"></i>
+              </a>
               {% if perms.wastes.change_waste %}
               <a href="{% url 'waste_update' waste.id %}" class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-pencil"></i>

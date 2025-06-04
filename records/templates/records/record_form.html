@@ -76,12 +76,17 @@
     priceDisplay.id = 'price_display';
     priceDisplay.innerHTML = '<strong>Preço por kg do resíduo:</strong> <span id="unit_price">R$ 0,00</span>';
     infoContainer.appendChild(priceDisplay);
-    
-    const totalValueDisplay = document.createElement('div');
+      const totalValueDisplay = document.createElement('div');
     totalValueDisplay.className = 'alert alert-info';
     totalValueDisplay.id = 'total_value_display';
     totalValueDisplay.innerHTML = '<strong>Valor Total Estimado:</strong> <span id="total_value">R$ 0,00</span>';
     infoContainer.appendChild(totalValueDisplay);
+    
+    const stockDisplay = document.createElement('div');
+    stockDisplay.className = 'alert alert-warning';
+    stockDisplay.id = 'stock_display';
+    stockDisplay.innerHTML = '<strong>Estoque Disponível:</strong> <span id="stock_amount">0,00 kg</span>';
+    infoContainer.appendChild(stockDisplay);
     
     // Inserir o container de informações antes do botão de submissão
     const formButtons = document.querySelector('.d-flex.justify-content-between');
@@ -89,8 +94,7 @@
       // Função para obter o preço por kg do resíduo selecionado
     function updateUnitPrice() {
       const wasteId = wasteSelect.value;
-      if (wasteId) {
-        // Fazer uma solicitação AJAX para obter os detalhes do resíduo
+      if (wasteId) {        // Fazer uma solicitação AJAX para obter os detalhes do resíduo
         fetch(`/wastes/api/${wasteId}/`)
           .then(response => response.json())
           .then(data => {
@@ -100,12 +104,29 @@
               unitPriceInput.value = price.toFixed(2);
               // Atualizar o display de preço
               document.getElementById('unit_price').textContent = `R$ ${price.toFixed(2)}`;
+              
+              // Atualizar estoque disponível
+              if (data.current_stock !== undefined) {
+                const stock = parseFloat(data.current_stock);
+                document.getElementById('stock_amount').textContent = `${stock.toFixed(2)} kg`;
+                
+                // Alterar cor do alerta baseado no estoque
+                const stockElement = document.getElementById('stock_display');
+                if (stock <= 0) {
+                  stockElement.className = 'alert alert-danger';
+                } else if (stock < 10) {
+                  stockElement.className = 'alert alert-warning';
+                } else {
+                  stockElement.className = 'alert alert-success';
+                }
+              }
+              
               // Atualizar o valor total
               calculateTotalValue();
             }
           })
           .catch(error => {
-            console.error('Erro ao obter preço do resíduo:', error);
+            console.error('Erro ao obter dados do resíduo:', error);
           });
       } else {
         document.getElementById('unit_price').textContent = 'R$ 0,00';

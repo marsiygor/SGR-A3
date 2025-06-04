@@ -1,4 +1,4 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.utils import timezone
@@ -42,3 +42,10 @@ class RecordDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'records/record_confirm_delete.html'
     success_url = reverse_lazy('record_list')
     permission_required = 'records.delete_record'
+
+
+class RecordDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Record
+    template_name = 'records/record_detail.html'
+    context_object_name = 'record'
+    permission_required = 'records.view_record'

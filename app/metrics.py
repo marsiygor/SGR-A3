@@ -89,15 +89,22 @@ def get_waste_and_record_metrics():
     
     num_sectors = Sector.objects.count()
     num_wastes = Waste.objects.count()
-    total_waste_weight = Waste.objects.aggregate(total=Sum('weight'))['total'] or 0
     
+    # Calculate current stock weight (entries minus exits)
+    entry_weight = Record.objects.filter(is_entry=True).aggregate(total=Sum('weight'))['total'] or 0
+    exit_weight = Record.objects.filter(is_entry=False).aggregate(total=Sum('weight'))['total'] or 0
+    current_stock_weight = entry_weight - exit_weight
+    
+    # Calculate estimated stock value (entries minus exits)
     total_entry_value = Record.objects.filter(is_entry=True).aggregate(total=Sum('value'))['total'] or 0
     total_exit_value = Record.objects.filter(is_entry=False).aggregate(total=Sum('value'))['total'] or 0
+    estimated_stock_value = total_entry_value - total_exit_value
     
     return {
         'num_sectors': num_sectors,
         'num_wastes': num_wastes,
-        'total_waste_weight': total_waste_weight,
+        'current_stock_weight': current_stock_weight,
+        'estimated_stock_value': estimated_stock_value,
         'total_entry_value': total_entry_value,
         'total_exit_value': total_exit_value,
     }
@@ -122,3 +129,106 @@ def get_entry_exit_data():
         'entry_values': entry_values,
         'exit_values': exit_values,
     }
+
+
+def get_waste_by_category_data():
+    """Get waste distribution by category for pie chart"""
+    from categories.models import Category
+    from wastes.models import Waste
+    
+    categories = Category.objects.all()
+    data = {}
+    for category in categories:
+        count = Waste.objects.filter(category=category).count()
+        if count > 0:
+            data[category.name] = count
+    return data
+
+
+def get_waste_by_sector_data():
+    """Get waste distribution by sector for pie chart"""
+    from sectors.models import Sector
+    from wastes.models import Waste
+    
+    sectors = Sector.objects.all()
+    data = {}
+    for sector in sectors:
+        count = Waste.objects.filter(sector=sector).count()
+        if count > 0:
+            data[sector.name] = count
+    return data
+
+
+def get_stock_by_category_data():
+    """Get current stock weight by category for pie chart"""
+    from categories.models import Category
+    from records.models import Record
+    from django.db.models import Sum
+    
+    categories = Category.objects.all()
+    data = {}
+    for category in categories:
+        entry_weight = Record.objects.filter(
+            is_entry=True, 
+            waste__category=category
+        ).aggregate(total=Sum('weight'))['total'] or 0
+        
+        exit_weight = Record.objects.filter(
+            is_entry=False, 
+            waste__category=category
+        ).aggregate(total=Sum('weight'))['total'] or 0
+        
+        stock_weight = entry_weight - exit_weight
+        if stock_weight > 0:
+            data[category.name] = float(stock_weight)
+    return data
+
+
+def get_stock_by_sector_data():
+    """Get current stock weight by sector for pie chart"""
+    from sectors.models import Sector
+    from records.models import Record
+    from django.db.models import Sum
+    
+    sectors = Sector.objects.all()
+    data = {}
+    for sector in sectors:
+        entry_weight = Record.objects.filter(
+            is_entry=True, 
+            waste__sector=sector
+        ).aggregate(total=Sum('weight'))['total'] or 0
+        
+        exit_weight = Record.objects.filter(
+            is_entry=False, 
+            waste__sector=sector
+        ).aggregate(total=Sum('weight'))['total'] or 0
+        
+        stock_weight = entry_weight - exit_weight
+        if stock_weight > 0:
+            data[sector.name] = float(stock_weight)
+    return data
+
+
+def get_value_by_category_data():
+    """Get estimated stock value by category for pie chart"""
+    from categories.models import Category
+    from records.models import Record
+    from django.db.models import Sum
+    
+    categories = Category.objects.all()
+    data = {}
+    for category in categories:
+        entry_value = Record.objects.filter(
+            is_entry=True, 
+            waste__category=category
+        ).aggregate(total=Sum('value'))['total'] or 0
+        
+        exit_value = Record.objects.filter(
+            is_entry=False, 
+            waste__category=category
+        ).aggregate(total=Sum('value'))['total'] or 0
+        
+        stock_value = entry_value - exit_value
+        if stock_value > 0:
+            data[category.name] = float(stock_value)
+    return data

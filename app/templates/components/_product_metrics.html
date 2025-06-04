@@ -2,34 +2,38 @@
   <div class="card-body">
     <div class="row">
       <div class="col-md-2">
-        <div class="card bg-primary text-white">
+        <div class="card bg-primary text-white clickable-card" style="cursor: pointer;" data-chart="sectors">
           <div class="card-body text-center">
             <h6 class="card-title">Setores</h6>
             <p class="display-6">{{ waste_record_metrics.num_sectors }}</p>
+            <small>Clique para ver gráfico</small>
           </div>
         </div>
       </div>
       <div class="col-md-2">
-        <div class="card bg-success text-white">
+        <div class="card bg-success text-white clickable-card" style="cursor: pointer;" data-chart="wastes">
           <div class="card-body text-center">
             <h6 class="card-title">Resíduos</h6>
             <p class="display-6">{{ waste_record_metrics.num_wastes }}</p>
+            <small>Clique para ver gráfico</small>
           </div>
         </div>
       </div>
       <div class="col-md-2">
-        <div class="card bg-info text-white">
+        <div class="card bg-info text-white clickable-card" style="cursor: pointer;" data-chart="stock-weight">
           <div class="card-body text-center">
-            <h6 class="card-title">Peso total (kg)</h6>
-            <p class="display-6">{{ waste_record_metrics.total_waste_weight|floatformat:2 }}</p>
+            <h6 class="card-title">Peso em Estoque (kg)</h6>
+            <p class="display-6">{{ waste_record_metrics.current_stock_weight|floatformat:2 }}</p>
+            <small>Clique para ver gráfico</small>
           </div>
         </div>
       </div>
       <div class="col-md-3">
-        <div class="card bg-warning text-dark">
+        <div class="card bg-warning text-dark clickable-card" style="cursor: pointer;" data-chart="stock-value">
           <div class="card-body text-center">
-            <h6 class="card-title">Valor de Entrada (R$)</h6>
-            <p class="display-6">{{ waste_record_metrics.total_entry_value|floatformat:2 }}</p>
+            <h6 class="card-title">Valor Estimado de Estoque (R$)</h6>
+            <p class="display-6">{{ waste_record_metrics.estimated_stock_value|floatformat:2 }}</p>
+            <small>Clique para ver gráfico</small>
           </div>
         </div>
       </div>
@@ -44,3 +48,103 @@
     </div>
   </div>
 </div>
+
+<!-- Modal para gráficos -->
+<div class="modal fade" id="chartModal" tabindex="-1" aria-labelledby="chartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="chartModalLabel">Distribuição</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div style="height: 400px; display: flex; justify-content: center; align-items: center;">
+          <canvas id="modalChart" style="max-height: 380px;"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Data passed from Django template
+  const chartData = {
+    'sectors': {
+      title: 'Resíduos por Setor',
+      data: JSON.parse('{{ waste_by_sector_data|escapejs }}')
+    },
+    'wastes': {
+      title: 'Resíduos por Categoria', 
+      data: JSON.parse('{{ waste_by_category_data|escapejs }}')
+    },
+    'stock-weight': {
+      title: 'Peso em Estoque por Categoria (kg)',
+      data: JSON.parse('{{ stock_by_category_data|escapejs }}')
+    },
+    'stock-value': {
+      title: 'Valor em Estoque por Categoria (R$)',
+      data: JSON.parse('{{ value_by_category_data|escapejs }}')
+    }
+  };
+
+  let currentChart = null;
+
+  document.querySelectorAll('.clickable-card').forEach(function(card) {
+    card.addEventListener('click', function() {
+      const chartType = this.getAttribute('data-chart');
+      const data = chartData[chartType];
+      
+      if (!data || !data.data || Object.keys(data.data).length === 0) {
+        alert('Não há dados disponíveis para este gráfico.');
+        return;
+      }
+
+      // Update modal title
+      document.getElementById('chartModalLabel').textContent = data.title;
+
+      // Destroy existing chart
+      if (currentChart) {
+        currentChart.destroy();
+      }
+
+      // Create new chart
+      const ctx = document.getElementById('modalChart').getContext('2d');
+      currentChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(data.data),
+          datasets: [{
+            data: Object.values(data.data),
+            backgroundColor: [
+              '#FF6384',
+              '#36A2EB', 
+              '#FFCE56',
+              '#4BC0C0',
+              '#9966FF',
+              '#FF9F40',
+              '#FF6384',
+              '#C9CBCF',
+              '#4BC0C0',
+              '#FF6384'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
+
+      // Show modal
+      const modal = new bootstrap.Modal(document.getElementById('chartModal'));
+      modal.show();
+    });
+  });
+});
+</script>

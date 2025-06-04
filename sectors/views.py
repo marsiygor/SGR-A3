@@ -1,4 +1,4 @@
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .models import Sector
@@ -33,3 +33,10 @@ class SectorDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     template_name = 'sectors/sector_confirm_delete.html'
     success_url = reverse_lazy('sector_list')
     permission_required = 'sectors.delete_sector'
+
+
+class SectorDetailView(LoginRequiredMixin, PermissionRequiredMixin, DetailView):
+    model = Sector
+    template_name = 'sectors/sector_detail.html'
+    context_object_name = 'sector'
+    permission_required = 'sectors.view_sector'

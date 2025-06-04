@@ -33,8 +33,10 @@
           <tr>
             <td>{{ sector.name }}</td>
             <td>{{ sector.responsible }}</td>
-            <td>{{ sector.location }}</td>
-            <td>
+            <td>{{ sector.location }}</td>            <td>
+              <a href="{% url 'sector_detail' sector.id %}" class="btn btn-sm btn-outline-info">
+                <i class="bi bi-eye"></i>
+              </a>
               {% if perms.sectors.change_sector %}
               <a href="{% url 'sector_update' sector.id %}" class="btn btn-sm btn-outline-primary">
                 <i class="bi bi-pencil"></i>

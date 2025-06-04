@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Detalhes do Registro{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-6">
+    <h2>Detalhes do Registro</h2>
+  </div>
+  <div class="col-md-6 text-end">
+    <a href="{% url 'record_list' %}" class="btn btn-secondary">
+      <i class="bi bi-arrow-left"></i> Voltar à Lista
+    </a>
+    {% if perms.records.change_record %}
+    <a href="{% url 'record_update' record.id %}" class="btn btn-primary">
+      <i class="bi bi-pencil"></i> Editar
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <h5>Informações do Registro</h5>
+        <table class="table table-borderless">
+          <tbody>
+            <tr>
+              <td><strong>Resíduo:</strong></td>
+              <td>
+                {% if record.waste %}
+                  {{ record.waste.name }}
+                {% else %}
+                  {{ record.category.name }}
+                {% endif %}
+              </td>
+            </tr>
+            {% if record.waste %}
+            <tr>
+              <td><strong>Categoria:</strong></td>
+              <td>{{ record.waste.category.name }}</td>
+            </tr>
+            <tr>
+              <td><strong>Setor:</strong></td>
+              <td>{{ record.waste.sector.name }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+              <td><strong>Peso (kg):</strong></td>
+              <td>{{ record.weight }}</td>
+            </tr>
+            <tr>
+              <td><strong>Preço por kg (R$):</strong></td>
+              <td>{{ record.unit_price }}</td>
+            </tr>
+            <tr>
+              <td><strong>Tipo de Operação:</strong></td>
+              <td>
+                {% if record.is_entry %}
+                  <span class="badge bg-success">Entrada</span>
+                {% else %}
+                  <span class="badge bg-danger">Saída</span>
+                {% endif %}
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Valor Total (R$):</strong></td>
+              <td class="fw-bold">{{ record.value|floatformat:2 }}</td>
+            </tr>
+            <tr>
+              <td><strong>Data do Registro:</strong></td>
+              <td>{{ record.date|date:"d/m/Y H:i" }}</td>
+            </tr>
+            <tr>
+              <td><strong>Criado em:</strong></td>
+              <td>{{ record.created_at|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% if record.updated_at != record.created_at %}
+            <tr>
+              <td><strong>Última Atualização:</strong></td>
+              <td>{{ record.updated_at|date:"d/m/Y H:i" }}</td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+      {% if record.description %}
+      <div class="col-md-6">
+        <h5>Observações</h5>
+        <p>{{ record.description }}</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
