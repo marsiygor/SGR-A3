@@ -51,15 +51,15 @@
 
 <!-- Modal para gráficos -->
 <div class="modal fade" id="chartModal" tabindex="-1" aria-labelledby="chartModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+  <div class="modal-dialog modal-fullscreen-lg-down" style="max-width: 95vw; max-height: 95vh;">
+    <div class="modal-content" style="height: 95vh;">
       <div class="modal-header">
         <h5 class="modal-title" id="chartModalLabel">Distribuição</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <div style="height: 400px; display: flex; justify-content: center; align-items: center;">
-          <canvas id="modalChart" style="max-height: 380px;"></canvas>
+      <div class="modal-body" style="flex: 1; padding: 20px;">
+        <div style="height: calc(95vh - 120px); width: 100%; display: flex; justify-content: center; align-items: center;">
+          <canvas id="modalChart" style="max-width: 100%; max-height: 100%;"></canvas>
         </div>
       </div>
     </div>
@@ -132,14 +132,35 @@ document.addEventListener('DOMContentLoaded', function() {  // Data passed from 
               '#2F855A', // Verde escuro
               '#B7791F'  // Amarelo escuro
             ]
-          }]
-        },
-        options: {
+          }]        },        options: {
           responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
+          maintainAspectRatio: false,          plugins: {
             legend: {
-              position: 'bottom'
+              position: 'left',
+              labels: {
+                fontSize: 24,
+                padding: 30,
+                usePointStyle: true,
+                font: {
+                  size: 24,
+                  weight: 'bold'
+                }
+              }
+            },            tooltip: {
+              bodyFont: {
+                size: 20
+              },
+              titleFont: {
+                size: 22
+              }
+            }
+          },
+          layout: {
+            padding: {
+              top: 20,
+              bottom: 20,
+              left: 20,
+              right: 20
             }
           }
         }
